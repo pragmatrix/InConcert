@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 
 namespace InConcert.Tests
@@ -18,13 +19,22 @@ namespace InConcert.Tests
 		}
 
 		[Test]
-		public static void canTestForNotExistingDirectoryWithFileInfo()
+		public static void canTestForNotExistingPathWithFileInfo()
 		{
 			var curDir = Directory.GetCurrentDirectory();
 			curDir = Path.Combine(curDir, Guid.NewGuid().ToString());
 			var fi = new FileInfo(curDir);
 			Assert.That(fi.Exists, Is.False);
 			Assert.That(fi.Attributes, Is.EqualTo((FileAttributes)(-1)));
+		}
+
+		[Test]
+		public static void directoryGetFileSystemEntriesReturnsFullPathNames()
+		{
+			var safeFoldertoScan = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+			var entries = Directory.GetFileSystemEntries(safeFoldertoScan);
+			Assert.True(entries.Any());
+			Assert.True(entries.All(Path.IsPathRooted));
 		}
 	}
 }
