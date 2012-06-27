@@ -1,4 +1,6 @@
 using System.IO;
+using InConcert.Abstract;
+using Console = System.Console;
 
 namespace InConcert
 {
@@ -9,17 +11,27 @@ namespace InConcert
 		public readonly string RelativePath;
 		public readonly string Source;
 		public readonly string Target;
+		public readonly IReadFileSystem ReadFileSystem;
+		public readonly IWriteFileSystem WriteFileSystem;
+
 
 		public void log(string str)
 		{
-			System.Console.WriteLine(RelativePath + ": " + str);
+			Console.WriteLine(RelativePath + ": " + str);
 		}
 
-		public PathChange(Configuration configuration, ChangeLocation changeLocation, string relativePath)
+		public PathChange(
+			Configuration configuration, 
+			ChangeLocation changeLocation, 
+			string relativePath,
+			IReadFileSystem readFileSystem,
+			IWriteFileSystem writeFileSystem)
 		{
 			Configuration = configuration;
 			ChangeLocation = changeLocation;
 			RelativePath = relativePath;
+			ReadFileSystem = readFileSystem;
+			WriteFileSystem = writeFileSystem;
 
 			Source = Path.Combine(Configuration.SourcePath, RelativePath);
 			Target = Path.Combine(Configuration.TargetPath, RelativePath);
@@ -29,7 +41,9 @@ namespace InConcert
 		{
 			return new PathChange(Configuration,
 				ChangeLocation,
-				Path.Combine(RelativePath, name));
+				Path.Combine(RelativePath, name),
+				ReadFileSystem,
+				WriteFileSystem);
 		}
 	}
 }

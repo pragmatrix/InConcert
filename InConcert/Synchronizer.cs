@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using InConcert.Abstract;
 
 namespace InConcert
 {
@@ -8,30 +9,30 @@ namespace InConcert
 	{
 		public static async Task sync(PathChange change)
 		{
-			var sourceInfo = new FileInfo(change.Source);
-			var targetInfo = new FileInfo(change.Target);
+			var sourceInfo = change.ReadFileSystem.query(change.Source);
+			var targetInfo = change.ReadFileSystem.query(change.Target);
 
-			var sourceKind = sourceInfo.getKindOf();
-			var targetKind = targetInfo.getKindOf();
-			if (sourceKind == PathObjectKind.NotExisting && targetKind == PathObjectKind.NotExisting)
+			var sourceKind = sourceInfo.Type;
+			var targetKind = targetInfo.Type;
+			if (sourceKind == PathType.NotExisting && targetKind == PathType.NotExisting)
 			{
 				change.log("not existing");
 				return;
 			}
 
-			if (sourceKind == PathObjectKind.Ignored || targetKind == PathObjectKind.Ignored)
+			if (sourceKind == PathType.Ignored || targetKind == PathType.Ignored)
 			{
 				change.log("ignored");
 				return;
 			}
 
-			if (targetKind == PathObjectKind.NotExisting)
+			if (targetKind == PathType.NotExisting)
 			{
 				await copyToTarget(change, sourceKind);
 				return;
 			}
 		
-			if (sourceKind == PathObjectKind.NotExisting)
+			if (sourceKind == PathType.NotExisting)
 			{
 				await copyToSource(change, targetKind);
 				return;
@@ -43,35 +44,35 @@ namespace InConcert
 				return;
 			}
 
-			if (sourceKind == PathObjectKind.Directory)
+			if (sourceKind == PathType.Directory)
 				await DirectorySynchronizer.syncDirectory(change);
 			else
 				await FileSynchronizer.syncFile(change, sourceInfo, targetInfo);
 		}
 
-		static async Task copyToTarget(PathChange change, PathObjectKind kind)
+		static async Task copyToTarget(PathChange change, PathType kind)
 		{
 			switch (kind)
 			{
-				case PathObjectKind.Directory:
+				case PathType.Directory:
 					await DirectorySynchronizer.createDirectory(change, change.Target);
 					break;
 
-				case PathObjectKind.File:
+				case PathType.File:
 					await FileSynchronizer.copyFile(change, change.Source, change.Target);
 					break;
 			}
 		}
 
-		static async Task copyToSource(PathChange change, PathObjectKind kind)
+		static async Task copyToSource(PathChange change, PathType kind)
 		{
 			switch (kind)
 			{
-				case PathObjectKind.Directory:
+				case PathType.Directory:
 					await DirectorySynchronizer.createDirectory(change, change.Source);
 					break;
 
-				case PathObjectKind.File:
+				case PathType.File:
 					await FileSynchronizer.copyFile(change, change.Target, change.Source);
 					break;
 			}

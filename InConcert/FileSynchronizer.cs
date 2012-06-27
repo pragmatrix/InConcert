@@ -1,13 +1,14 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using InConcert.Abstract;
 
 namespace InConcert
 {
 	static class FileSynchronizer
 	{
-		public static async Task syncFile(PathChange change, FileInfo sourceInfo, FileInfo targetInfo)
+		public static async Task syncFile(PathChange change, IPathInfo sourceInfo, IPathInfo targetInfo)
 		{
-			var compareResult = await compareFile(change.Source, change.Target);
+			var compareResult = await compareFile(change.ReadFileSystem, change.Source, change.Target);
 
 			if (compareResult != CompareResult.Differ)
 				return;
@@ -41,35 +42,35 @@ namespace InConcert
 			Differ
 		}
 
-		static async Task<CompareResult> compareFile(string source, string target)
+		static async Task<CompareResult> compareFile(IReadFileSystem rfs, string source, string target)
 		{
-			var sourceInfo = new FileInfo(source);
-			var targetInfo = new FileInfo(target);
+			var sourceInfo = rfs.query(source);
+			var targetInfo = rfs.query(target);
 
-			var sKind = sourceInfo.getKindOf();
-			var tKind = targetInfo.getKindOf();
-			if (sKind != PathObjectKind.File || tKind != PathObjectKind.File)
+			var sType = sourceInfo.Type;
+			var tType = targetInfo.Type;
+			if (sType != PathType.File || tType != PathType.File)
 				return CompareResult.Unknown;
 
 			if (sourceInfo.Length != targetInfo.Length)
 				return CompareResult.Differ;
 
-			return await compareFilesWithSameSize(source, target);
+			return await compareFilesWithSameSize(rfs, source, target);
 		}
 
-		static async Task<CompareResult> compareFilesWithSameSize(string source, string target)
+		static async Task<CompareResult> compareFilesWithSameSize(IReadFileSystem rfs, string source, string target)
 		{
 			const int BufSize = 0x10000;
 			var sBuf = new byte[BufSize];
 			var tBuf = new byte[BufSize];
 
-			var sFile = File.Open(source, FileMode.Open, FileAccess.Read, FileShare.Delete | FileShare.ReadWrite);
-			var tFile = File.Open(target, FileMode.Open, FileAccess.Read, FileShare.Delete | FileShare.ReadWrite);
+			var sFile = rfs.open(source);
+			var tFile = rfs.open(target);
 
 			for(;;)
 			{
-				var t1 = sFile.ReadAsync(sBuf, 0, sBuf.Length);
-				var t2 = tFile.ReadAsync(tBuf, 0, tBuf.Length);
+				var t1 = sFile.readAsync(sBuf, 0, sBuf.Length);
+				var t2 = tFile.readAsync(tBuf, 0, tBuf.Length);
 
 				var readBytes = await Task.WhenAll(t1, t2);
 				var read = readBytes[0];

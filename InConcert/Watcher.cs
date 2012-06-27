@@ -78,7 +78,7 @@ namespace InConcert
 		string stripPath(string path)
 		{
 			if (!path.StartsWith(_path))
-				throw new Exception("{0}: internal error, invalid changeed path: {1}".format(_path, path));
+				throw new Exception("{0}: internal error, invalid changed path: {1}".format(_path, path));
 	
 			return path.Substring(_path.Length);
 		}
