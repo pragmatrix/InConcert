@@ -21,7 +21,7 @@ namespace InConcert
 	{
 		public readonly Configuration Configuration;
 		public readonly ChangeMode ChangeMode;
-		public readonly ChangeLocation ChangeLocation;
+		public readonly ChangeLocation Location;
 		public readonly string RelativePath;
 		public readonly string Source;
 		public readonly string Target;
@@ -37,14 +37,14 @@ namespace InConcert
 		public PathChange(
 			Configuration configuration, 
 			ChangeMode mode,
-			ChangeLocation changeLocation, 
+			ChangeLocation location, 
 			string relativePath,
 			IReadFileSystem readFileSystem,
 			IWriteFileSystem writeFileSystem)
 		{
 			Configuration = configuration;
 			ChangeMode = mode;
-			ChangeLocation = changeLocation;
+			Location = location;
 			RelativePath = relativePath;
 			ReadFileSystem = readFileSystem;
 			WriteFileSystem = writeFileSystem;
@@ -57,7 +57,7 @@ namespace InConcert
 		{
 			return new PathChange(Configuration,
 				ChangeMode,
-				ChangeLocation,
+				Location,
 				Path.Combine(RelativePath, name),
 				ReadFileSystem,
 				WriteFileSystem);

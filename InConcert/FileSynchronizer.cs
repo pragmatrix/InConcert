@@ -14,7 +14,7 @@ namespace InConcert
 
 			// decide in which direction to sync.
 
-			var changeLocation = change.ChangeLocation;
+			var changeLocation = change.Location;
 			if (changeLocation == ChangeLocation.Unknown)
 			{
 				changeLocation = sourceInfo.LastWriteTimeUtc >= targetInfo.LastWriteTimeUtc
@@ -92,11 +92,15 @@ namespace InConcert
 
 		public static async Task copyFile(PathChange change, string source, string target)
 		{
+			change.log("copying");
+
 			await change.WriteFileSystem.copyAsync(source, target);
 		}
 
 		public static async Task overwriteFile(PathChange change, string source, string target)
 		{
+			change.log("overwriting");
+
 			await change.WriteFileSystem.overwriteAsync(source, target);
 		}
 	}

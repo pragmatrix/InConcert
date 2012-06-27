@@ -7,18 +7,9 @@ using NUnit.Framework;
 namespace InConcert.Tests.SynchronizerTests
 {
 	[TestFixture]
-	public class FileSynchronization
+	class FileSynchronization : Shared
 	{
-		Mock<IReadFileSystem> _readFileSystem;
-		Mock<IWriteFileSystem> _writeFileSystem;
-
-		Mock<IPathInfo> _sourceInfo;
-		Mock<IPathInfo> _targetInfo;
-
-		const string SourcePath = "s:\\file.txt";
-		const string TargetPath = "t:\\file.txt";
-
-
+		
 		[Test]
 		public void testSameFilesDontSynchronize()
 		{
@@ -26,8 +17,7 @@ namespace InConcert.Tests.SynchronizerTests
 
 			var pc = createSimplePathChange();
 
-			FileSynchronizer.syncFile(pc, _sourceInfo.Object, _targetInfo.Object)
-				.Wait();
+			syncFile(pc);
 		}
 
 		[Test]
@@ -38,8 +28,7 @@ namespace InConcert.Tests.SynchronizerTests
 
 			var pc = createSimplePathChange();
 
-			FileSynchronizer.syncFile(pc, _sourceInfo.Object, _targetInfo.Object)
-				.Wait();
+			syncFile(pc);
 		}
 
 		[Test]
@@ -50,8 +39,7 @@ namespace InConcert.Tests.SynchronizerTests
 
 			var pc = createSimplePathChange();
 
-			FileSynchronizer.syncFile(pc, _sourceInfo.Object, _targetInfo.Object)
-				.Wait();
+			syncFile(pc);
 			// in this test, the change source is unknown and the date time is the same, so we expect a copy from source to target (with overwrite!)
 
 			_writeFileSystem.Verify(ifs => ifs.overwriteAsync(SourcePath, TargetPath), Times.Once());
@@ -66,8 +54,7 @@ namespace InConcert.Tests.SynchronizerTests
 
 			var pc = createSimplePathChange();
 
-			FileSynchronizer.syncFile(pc, _sourceInfo.Object, _targetInfo.Object)
-				.Wait();
+			syncFile(pc);
 			// change location is unknown, but target is newer, so we prefer target.
 			_writeFileSystem.Verify(ifs => ifs.overwriteAsync(TargetPath, SourcePath), Times.Once());
 		}
@@ -79,17 +66,15 @@ namespace InConcert.Tests.SynchronizerTests
 			setupOverwrite();
 
 			var pc = createSimplePathChange(ChangeLocation.AtTarget);
-			FileSynchronizer.syncFile(pc, _sourceInfo.Object, _targetInfo.Object)
-				.Wait();
+			syncFile(pc);
 
 			_writeFileSystem.Verify(ifs => ifs.overwriteAsync(TargetPath, SourcePath), Times.Once());
 		}
 
 		[SetUp]
-		public void setup()
+		public new void setup()
 		{
-			_readFileSystem = new Mock<IReadFileSystem>();
-			_writeFileSystem = new Mock<IWriteFileSystem>();
+			base.setup();
 
 			_sourceInfo = new Mock<IPathInfo>();
 			_targetInfo = new Mock<IPathInfo>();
@@ -105,18 +90,6 @@ namespace InConcert.Tests.SynchronizerTests
 		{
 			_writeFileSystem.Setup(wfs => wfs.overwriteAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.Run(() => { }));
 		}
-
-		PathChange createSimplePathChange(ChangeLocation location = ChangeLocation.Unknown)
-		{
-			var config = createSimpleConfiguration();
-			return new PathChange(config, ChangeMode.Shallow, location, "file.txt", _readFileSystem.Object, _writeFileSystem.Object);
-		}
-
-		Configuration createSimpleConfiguration()
-		{
-			return Configuration.fromCommandLine("s:\\", "t:\\");
-		}
-
 
 		void setupSameFiles()
 		{
@@ -183,5 +156,13 @@ namespace InConcert.Tests.SynchronizerTests
 			}
 
 		}
+
+		void syncFile(PathChange pc)
+		{
+			FileSynchronizer.syncFile(pc, _sourceInfo.Object, _targetInfo.Object)
+				.Wait();
+		}
+
+	
 	}
 }

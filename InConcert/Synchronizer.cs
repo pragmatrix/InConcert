@@ -7,8 +7,9 @@ namespace InConcert
 	{
 		public static async Task sync(PathChange change)
 		{
-			var sourceInfo = change.ReadFileSystem.query(change.Source);
-			var targetInfo = change.ReadFileSystem.query(change.Target);
+			var reader = change.ReadFileSystem;
+			var sourceInfo = reader.query(change.Source);
+			var targetInfo = reader.query(change.Target);
 
 			var sourceKind = sourceInfo.Type;
 			var targetKind = targetInfo.Type;
@@ -26,13 +27,19 @@ namespace InConcert
 
 			if (targetKind == PathType.NotExisting)
 			{
-				await copyToTarget(change, sourceKind);
+				if (change.Location == ChangeLocation.AtTarget)
+					deleteSource(change, sourceKind);
+				else
+					await copyToTarget(change, sourceKind);
 				return;
 			}
 		
 			if (sourceKind == PathType.NotExisting)
 			{
-				await copyToSource(change, targetKind);
+				if (change.Location == ChangeLocation.AtSource)
+					deleteTarget(change, targetKind);
+				else
+					await copyToSource(change, targetKind);
 				return;
 			}
 
@@ -72,6 +79,30 @@ namespace InConcert
 
 				case PathType.File:
 					await FileSynchronizer.copyFile(change, change.Target, change.Source);
+					break;
+			}
+		}
+
+		static void deleteSource(PathChange change, PathType type)
+		{
+			delete(change, change.Source, type);
+		}
+
+		static void deleteTarget(PathChange change, PathType type)
+		{
+			delete(change, change.Target, type);
+		}
+
+		static void delete(PathChange change, string path, PathType type)
+		{
+			var writer = change.WriteFileSystem;
+			switch (type)
+			{
+				case PathType.Directory:
+					writer.deleteDirectoryRecursive(path);
+					break;
+				case PathType.File:
+					writer.deleteFile(path);
 					break;
 			}
 		}

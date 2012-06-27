@@ -21,6 +21,8 @@ namespace InConcert
 
 		public static void createDirectory(PathChange change, string path)
 		{
+			change.log("creating directory");
+			
 			change.WriteFileSystem.createDirectory(path);
 		}
 	}

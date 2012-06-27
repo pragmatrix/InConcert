@@ -4,6 +4,14 @@ namespace InConcert.Abstract
 {
 	sealed class FakeWriteFileSystem : IWriteFileSystem
 	{
+		public void createDirectory(string path)
+		{
+		}
+
+		public void deleteDirectoryRecursive(string path)
+		{
+		}
+
 		public async Task copyAsync(string source, string target)
 		{
 		}
@@ -12,8 +20,9 @@ namespace InConcert.Abstract
 		{
 		}
 
-		public void createDirectory(string path)
+		public void deleteFile(string path)
 		{
 		}
+
 	}
 }

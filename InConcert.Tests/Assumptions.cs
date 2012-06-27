@@ -36,5 +36,24 @@ namespace InConcert.Tests
 			Assert.True(entries.Any());
 			Assert.True(entries.All(Path.IsPathRooted));
 		}
+
+		[Test, ExpectedException(typeof(IOException))]
+		public static void copyWhenFileAlreadyExists()
+		{
+			var tmpFilename1 = Path.GetTempFileName();
+			File.WriteAllBytes(tmpFilename1, new byte[0]);
+
+			var tmpFilename2 = Path.GetTempFileName();
+			File.WriteAllBytes(tmpFilename2, new byte[0]);
+
+			File.Copy(tmpFilename1, tmpFilename2);
+		}
+
+		[Test]
+		public static void createDirectoryThatExists()
+		{
+			var cur = Directory.GetCurrentDirectory();
+			Directory.CreateDirectory(cur);
+		}
 	}
 }
