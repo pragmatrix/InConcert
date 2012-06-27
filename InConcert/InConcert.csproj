@@ -64,7 +64,6 @@
     <Compile Include="Abstract\IReadFileSystem.cs" />
     <Compile Include="Abstract\IReadStream.cs" />
     <Compile Include="Abstract\IWriteFileSystem.cs" />
-    <Compile Include="ChangeLocation.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="System.IO\PathInfo.cs" />
     <Compile Include="System.IO\ReadFileSystem.cs" />

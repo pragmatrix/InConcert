@@ -1,4 +1,7 @@
-﻿using InConcert.Abstract;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using InConcert.Abstract;
 
 namespace InConcert.System.IO
 {
@@ -12,6 +15,16 @@ namespace InConcert.System.IO
 		public IReadStream open(string path)
 		{
 			return new ReadStream(path);
+		}
+
+		public IEnumerable<string> scan(string path)
+		{
+			return filenames(Directory.GetFileSystemEntries(path));
+		}
+
+		static IEnumerable<string> filenames(IEnumerable<string> paths)
+		{
+			return paths.Select(Path.GetFileName);
 		}
 	}
 }

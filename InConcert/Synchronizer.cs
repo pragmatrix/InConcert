@@ -55,7 +55,7 @@ namespace InConcert
 			switch (kind)
 			{
 				case PathType.Directory:
-					await DirectorySynchronizer.createDirectory(change, change.Target);
+					DirectorySynchronizer.createDirectory(change, change.Target);
 					break;
 
 				case PathType.File:
@@ -69,7 +69,7 @@ namespace InConcert
 			switch (kind)
 			{
 				case PathType.Directory:
-					await DirectorySynchronizer.createDirectory(change, change.Source);
+					DirectorySynchronizer.createDirectory(change, change.Source);
 					break;
 
 				case PathType.File:

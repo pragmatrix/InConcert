@@ -6,5 +6,6 @@ namespace InConcert.Abstract
 	{
 		Task asyncCopy(string source, string target);
 		Task asyncOverwrite(string source, string target);
+		void createDirectory(string path);
 	}
 }

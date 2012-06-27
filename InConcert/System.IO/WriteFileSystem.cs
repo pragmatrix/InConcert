@@ -6,6 +6,11 @@ namespace InConcert.System.IO
 {
 	sealed class WriteFileSystem : IWriteFileSystem
 	{
+		public void createDirectory(string path)
+		{
+			Directory.CreateDirectory(path);
+		}
+
 		public Task asyncCopy(string source, string target)
 		{
 			return Task.Run(() => File.Copy(source, target, overwrite: false));

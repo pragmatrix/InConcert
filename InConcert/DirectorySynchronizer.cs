@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Linq;
 
 namespace InConcert
@@ -8,22 +7,21 @@ namespace InConcert
 	{
 		public static async Task syncDirectory(PathChange change)
 		{
-			var sourceEntries = Directory.GetFileSystemEntries(change.Source);
-			var targetEntries = Directory.GetFileSystemEntries(change.Target);
+			if (change.ChangeMode != ChangeMode.Deep)
+				return;
+
+			var rfs = change.ReadFileSystem;
+			var sourceEntries = rfs.scan(change.Source);
+			var targetEntries = rfs.scan(change.Target);
 
 			var all = sourceEntries.Concat(targetEntries).Distinct();
 
 			await Task.WhenAll(all.Select(str => Synchronizer.sync(change.nested(str))));
 		}
 
-		public static async Task createDirectory(PathChange change, string path)
+		public static void createDirectory(PathChange change, string path)
 		{
-			change.log("creating directory");
-
-			if (!change.Configuration.Sync)
-				return;
-
-			await Task.Run(() => Directory.CreateDirectory(path));
+			change.WriteFileSystem.createDirectory(path);
 		}
 	}
 }

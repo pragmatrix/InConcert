@@ -4,9 +4,23 @@ using Console = System.Console;
 
 namespace InConcert
 {
+	enum ChangeMode
+	{
+		Shallow,
+		Deep
+	}
+
+	enum ChangeLocation
+	{
+		AtSource,
+		AtTarget,
+		Unknown
+	}
+
 	sealed class PathChange
 	{
 		public readonly Configuration Configuration;
+		public readonly ChangeMode ChangeMode;
 		public readonly ChangeLocation ChangeLocation;
 		public readonly string RelativePath;
 		public readonly string Source;
@@ -22,12 +36,14 @@ namespace InConcert
 
 		public PathChange(
 			Configuration configuration, 
+			ChangeMode mode,
 			ChangeLocation changeLocation, 
 			string relativePath,
 			IReadFileSystem readFileSystem,
 			IWriteFileSystem writeFileSystem)
 		{
 			Configuration = configuration;
+			ChangeMode = mode;
 			ChangeLocation = changeLocation;
 			RelativePath = relativePath;
 			ReadFileSystem = readFileSystem;
@@ -40,6 +56,7 @@ namespace InConcert
 		public PathChange nested(string name)
 		{
 			return new PathChange(Configuration,
+				ChangeMode,
 				ChangeLocation,
 				Path.Combine(RelativePath, name),
 				ReadFileSystem,

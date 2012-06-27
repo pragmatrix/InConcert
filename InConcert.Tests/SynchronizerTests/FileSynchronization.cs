@@ -109,7 +109,7 @@ namespace InConcert.Tests.SynchronizerTests
 		PathChange createSimplePathChange(ChangeLocation location = ChangeLocation.Unknown)
 		{
 			var config = createSimpleConfiguration();
-			return new PathChange(config, location, "file.txt", _readFileSystem.Object, _writeFileSystem.Object);
+			return new PathChange(config, ChangeMode.Shallow, location, "file.txt", _readFileSystem.Object, _writeFileSystem.Object);
 		}
 
 		Configuration createSimpleConfiguration()
