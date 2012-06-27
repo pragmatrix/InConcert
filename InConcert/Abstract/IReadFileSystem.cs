@@ -1,6 +1,6 @@
 namespace InConcert.Abstract
 {
-	interface IReadFileSystem
+	public interface IReadFileSystem
 	{
 		IPathInfo query(string path);
 		IReadStream open(string path);

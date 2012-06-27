@@ -2,7 +2,7 @@
 
 namespace InConcert.Abstract
 {
-	interface IReadStream
+	public interface IReadStream
 	{
 		Task<int> readAsync(byte[] buf, int offset, int count);
 	}

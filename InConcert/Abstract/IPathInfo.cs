@@ -2,7 +2,7 @@ using System;
 
 namespace InConcert.Abstract
 {
-	enum PathType
+	public enum PathType
 	{
 		File,
 		Directory,
@@ -10,7 +10,7 @@ namespace InConcert.Abstract
 		NotExisting
 	}
 
-	interface IPathInfo
+	public interface IPathInfo
 	{
 		PathType Type { get; }
 
