@@ -23,6 +23,5 @@ namespace InConcert.Abstract
 		public void deleteFile(string path)
 		{
 		}
-
 	}
 }

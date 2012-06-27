@@ -61,6 +61,8 @@ namespace InConcert
 			{
 				case PathType.Directory:
 					DirectorySynchronizer.createDirectory(change, change.Target);
+					if (change.Mode == ChangeMode.Deep && change.Configuration.Sync)
+						await sync(change);
 					break;
 
 				case PathType.File:
@@ -75,6 +77,8 @@ namespace InConcert
 			{
 				case PathType.Directory:
 					DirectorySynchronizer.createDirectory(change, change.Source);
+					if (change.Mode == ChangeMode.Deep && change.Configuration.Sync)
+						await sync(change);
 					break;
 
 				case PathType.File:

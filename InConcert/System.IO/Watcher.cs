@@ -12,9 +12,16 @@ namespace InConcert.System.IO
 		const int InitialBufferSize = 0x8000;
 
 		readonly FileSystemWatcher _watcher;
+		static readonly string DirectorySeparatorString = new string(new[]{Path.DirectorySeparatorChar});
 
 		public Watcher(string path, Action<string> receiver)
 		{
+			// important to append the path with a directory separator, 
+			// so that stripping works as expected!
+
+			if (!path.EndsWith(DirectorySeparatorString))
+				path += DirectorySeparatorString;
+
 			_path = path;
 			_receiver = receiver;
 
@@ -29,9 +36,7 @@ namespace InConcert.System.IO
 				= NotifyFilters.DirectoryName
 				| NotifyFilters.FileName
 				| NotifyFilters.LastWrite
-
 				// we want attributes to catch error-fixups
-
 				| NotifyFilters.Attributes
 				| NotifyFilters.Security;
 			// we assume that size changes are covered by LastWrite 
