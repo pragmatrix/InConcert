@@ -20,7 +20,7 @@ namespace InConcert
 	sealed class PathChange
 	{
 		public readonly Configuration Configuration;
-		public readonly ChangeMode ChangeMode;
+		public readonly ChangeMode Mode;
 		public readonly ChangeLocation Location;
 		public readonly string RelativePath;
 		public readonly string Source;
@@ -43,7 +43,7 @@ namespace InConcert
 			IWriteFileSystem writeFileSystem)
 		{
 			Configuration = configuration;
-			ChangeMode = mode;
+			Mode = mode;
 			Location = location;
 			RelativePath = relativePath;
 			ReadFileSystem = readFileSystem;
@@ -56,7 +56,7 @@ namespace InConcert
 		public PathChange nested(string name)
 		{
 			return new PathChange(Configuration,
-				ChangeMode,
+				Mode,
 				Location,
 				Path.Combine(RelativePath, name),
 				ReadFileSystem,

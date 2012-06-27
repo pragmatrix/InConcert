@@ -7,7 +7,7 @@ namespace InConcert
 	{
 		public static async Task syncDirectory(PathChange change)
 		{
-			if (change.ChangeMode != ChangeMode.Deep)
+			if (change.Mode != ChangeMode.Deep)
 				return;
 
 			var rfs = change.ReadFileSystem;
