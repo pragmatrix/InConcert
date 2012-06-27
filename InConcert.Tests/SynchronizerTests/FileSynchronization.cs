@@ -162,6 +162,10 @@ namespace InConcert.Tests.SynchronizerTests
 				_buf = buf;
 			}
 
+			public void Dispose()
+			{
+			}
+
 			public Task<int> readAsync(byte[] buf, int offset, int count)
 			{
 
@@ -177,6 +181,7 @@ namespace InConcert.Tests.SynchronizerTests
 						return _buf.Length;
 					});
 			}
+
 		}
 	}
 }

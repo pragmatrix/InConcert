@@ -63,25 +63,28 @@ namespace InConcert
 			var sBuf = new byte[BufSize];
 			var tBuf = new byte[BufSize];
 
-			var sFile = rfs.open(source);
-			var tFile = rfs.open(target);
-
-			for(;;)
+			using (var sFile = rfs.open(source))
+			using (var tFile = rfs.open(target))
 			{
-				var t1 = sFile.readAsync(sBuf, 0, sBuf.Length);
-				var t2 = tFile.readAsync(tBuf, 0, tBuf.Length);
 
-				var readBytes = await Task.WhenAll(t1, t2);
-				var read = readBytes[0];
-				if (read != readBytes[1])
-					return CompareResult.Differ;
+				for (; ; )
+				{
+					var t1 = sFile.readAsync(sBuf, 0, sBuf.Length);
+					var t2 = tFile.readAsync(tBuf, 0, tBuf.Length);
 
-				if (read == 0)
-					return CompareResult.Equal;
-
-				for (int i = 0; i != read; ++i)
-					if (sBuf[i] != tBuf[i])
+					var readBytes = await Task.WhenAll(t1, t2);
+					var read = readBytes[0];
+					if (read != readBytes[1])
 						return CompareResult.Differ;
+
+					if (read == 0)
+						return CompareResult.Equal;
+
+					for (int i = 0; i != read; ++i)
+						if (sBuf[i] != tBuf[i])
+							return CompareResult.Differ;
+				}
+				
 			}
 		}
 

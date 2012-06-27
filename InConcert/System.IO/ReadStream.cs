@@ -13,6 +13,11 @@ namespace InConcert.System.IO
 			_stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Delete | FileShare.ReadWrite);
 		}
 
+		public void Dispose()
+		{
+			_stream.Dispose();
+		}
+
 		public Task<int> readAsync(byte[] buf, int offset, int count)
 		{
 			return _stream.ReadAsync(buf, offset, count);
