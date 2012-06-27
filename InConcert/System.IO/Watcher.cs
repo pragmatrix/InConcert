@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
 using Toolbox;
 
-namespace InConcert
+namespace InConcert.System.IO
 {
 	sealed class Watcher : IDisposable
 	{

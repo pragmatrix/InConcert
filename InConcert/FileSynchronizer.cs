@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using InConcert.Abstract;
 
 namespace InConcert
@@ -93,7 +92,7 @@ namespace InConcert
 			await change.WriteFileSystem.copyAsync(source, target);
 		}
 
-		static async Task overwriteFile(PathChange change, string source, string target)
+		public static async Task overwriteFile(PathChange change, string source, string target)
 		{
 			await change.WriteFileSystem.overwriteAsync(source, target);
 		}

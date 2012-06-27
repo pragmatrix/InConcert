@@ -56,6 +56,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\FakeWriteFileSystem.cs" />
     <Compile Include="Abstract\IPathInfo.cs" />
     <Compile Include="Abstract\IReadFileSystem.cs" />
     <Compile Include="Abstract\IReadStream.cs" />
@@ -71,9 +72,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Synchronizer.cs" />
     <Compile Include="System.IO\ReadStream.cs" />
+    <Compile Include="System.IO\Watcher.cs" />
     <Compile Include="System.IO\WriteFileSystem.cs" />
+    <Compile Include="Toolbox\DisposeAction.cs" />
     <Compile Include="Toolbox\StringExtensions.cs" />
-    <Compile Include="Watcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
