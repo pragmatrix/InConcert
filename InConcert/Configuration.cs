@@ -68,7 +68,7 @@ namespace InConcert
 		const string InvalidArgs =
 			"InConcert.exe SourcePath TargetPath [--sync] [--watch] [--git]\n" +
 					"  --sync   synchronize folders and files\n" +
-					"  --watch  watch for changes" +
+					"  --watch  watch for changes\n" +
 					"  --git    ignore .git and .gitignore";
 	}
 }
