@@ -54,7 +54,7 @@ namespace InConcert.Tests.SynchronizerTests
 				.Wait();
 			// in this test, the change source is unknown and the date time is the same, so we expect a copy from source to target (with overwrite!)
 
-			_writeFileSystem.Verify(ifs => ifs.asyncOverwrite(SourcePath, TargetPath), Times.Once());
+			_writeFileSystem.Verify(ifs => ifs.overwriteAsync(SourcePath, TargetPath), Times.Once());
 		}
 
 		[Test]
@@ -69,7 +69,7 @@ namespace InConcert.Tests.SynchronizerTests
 			FileSynchronizer.syncFile(pc, _sourceInfo.Object, _targetInfo.Object)
 				.Wait();
 			// change location is unknown, but target is newer, so we prefer target.
-			_writeFileSystem.Verify(ifs => ifs.asyncOverwrite(TargetPath, SourcePath), Times.Once());
+			_writeFileSystem.Verify(ifs => ifs.overwriteAsync(TargetPath, SourcePath), Times.Once());
 		}
 
 		[Test]
@@ -82,7 +82,7 @@ namespace InConcert.Tests.SynchronizerTests
 			FileSynchronizer.syncFile(pc, _sourceInfo.Object, _targetInfo.Object)
 				.Wait();
 
-			_writeFileSystem.Verify(ifs => ifs.asyncOverwrite(TargetPath, SourcePath), Times.Once());
+			_writeFileSystem.Verify(ifs => ifs.overwriteAsync(TargetPath, SourcePath), Times.Once());
 		}
 
 		[SetUp]
@@ -103,7 +103,7 @@ namespace InConcert.Tests.SynchronizerTests
 
 		void setupOverwrite()
 		{
-			_writeFileSystem.Setup(wfs => wfs.asyncOverwrite(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.Run(() => { }));
+			_writeFileSystem.Setup(wfs => wfs.overwriteAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.Run(() => { }));
 		}
 
 		PathChange createSimplePathChange(ChangeLocation location = ChangeLocation.Unknown)

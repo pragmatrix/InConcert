@@ -90,12 +90,12 @@ namespace InConcert
 
 		public static async Task copyFile(PathChange change, string source, string target)
 		{
-			await change.WriteFileSystem.asyncCopy(source, target);
+			await change.WriteFileSystem.copyAsync(source, target);
 		}
 
 		static async Task overwriteFile(PathChange change, string source, string target)
 		{
-			await change.WriteFileSystem.asyncOverwrite(source, target);
+			await change.WriteFileSystem.overwriteAsync(source, target);
 		}
 	}
 }

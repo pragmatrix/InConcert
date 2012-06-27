@@ -11,12 +11,12 @@ namespace InConcert.System.IO
 			Directory.CreateDirectory(path);
 		}
 
-		public Task asyncCopy(string source, string target)
+		public Task copyAsync(string source, string target)
 		{
 			return Task.Run(() => File.Copy(source, target, overwrite: false));
 		}
 
-		public Task asyncOverwrite(string source, string target)
+		public Task overwriteAsync(string source, string target)
 		{
 			return Task.Run(() => File.Copy(source, target, overwrite: true));
 		}
